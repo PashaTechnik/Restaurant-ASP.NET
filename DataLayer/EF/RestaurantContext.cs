@@ -1,16 +1,23 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Configuration;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
-namespace Project_.Net
+namespace DataLayer
 {
-    public partial class restaurantContext : DbContext
+    public partial class RestaurantContext : DbContext
     {
-        public restaurantContext()
+        public RestaurantContext()
         {
         }
 
-        public restaurantContext(DbContextOptions<restaurantContext> options)
+        public RestaurantContext(DbContextOptions<RestaurantContext> options)
             : base(options)
         {
         }
@@ -24,10 +31,13 @@ namespace Project_.Net
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            IConfigurationRoot configuration = new ConfigurationBuilder()
+                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                .AddJsonFile("appsettings.json")
+                .Build();
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseNpgsql("Host=localhost;Database=restaurant;Username=admin;Password=1234");
+                optionsBuilder.UseNpgsql(configuration.GetConnectionString("myDb"));
             }
         }
 

@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Project_.Net
+namespace DataLayer
 {
-    public partial class Orders
+    public partial class Menu
     {
-        public Orders()
+        public Menu()
         {
             Orderdetails = new HashSet<Orderdetails>();
         }
 
-        public int Orderid { get; set; }
-        public string Clientname { get; set; }
+        public int Positionid { get; set; }
+        public int? Dishid { get; set; }
+        public int? Size { get; set; }
         public int? Price { get; set; }
 
+        public virtual Dish Dish { get; set; }
         public virtual ICollection<Orderdetails> Orderdetails { get; set; }
     }
 }

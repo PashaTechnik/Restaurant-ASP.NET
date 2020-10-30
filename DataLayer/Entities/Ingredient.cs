@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Project_.Net
+namespace DataLayer
 {
-    public partial class Dish
+    public partial class Ingredient
     {
-        public Dish()
+        public Ingredient()
         {
             Dishdetails = new HashSet<Dishdetails>();
-            Menu = new HashSet<Menu>();
         }
 
-        public int Dishid { get; set; }
+        public int Ingredientid { get; set; }
         public string Name { get; set; }
 
         public virtual ICollection<Dishdetails> Dishdetails { get; set; }
-        public virtual ICollection<Menu> Menu { get; set; }
     }
 }

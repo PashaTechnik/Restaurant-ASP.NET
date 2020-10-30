@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Project_.Net
+namespace DataLayer
 {
     public partial class Dishdetails
     {

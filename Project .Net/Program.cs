@@ -6,18 +6,23 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using DataLayer.Net;
 
-namespace Project_.Net
+namespace DataLayer.Net
 {
     public class Program
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            // using (restaurantContext db = new restaurantContext())
+            // {
+            //     Ingredient ingredient1 = new Ingredient();
+            //     ingredient1.Name = "Салат";
+            //     db.Ingredient.Add(ingredient1);
+            //     db.SaveChanges();
+            // }
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+
     }
 }
