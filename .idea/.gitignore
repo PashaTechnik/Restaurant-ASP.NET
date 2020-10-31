@@ -1,2 +1,5 @@
 # Default ignored files
 /.idea.Project .Net/.idea/workspace.xml
+# Datasource local storage ignored files
+/.idea.Project .Net/.idea/dataSources/
+/.idea.Project .Net/.idea/dataSources.local.xml
