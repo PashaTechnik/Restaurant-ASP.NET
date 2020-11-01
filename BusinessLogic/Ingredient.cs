@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DataLayer
+namespace BusinessLogic
 {
     public class Ingredient
     {

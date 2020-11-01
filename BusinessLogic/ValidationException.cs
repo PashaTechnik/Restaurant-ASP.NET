@@ -1,6 +1,6 @@
 using System;
 
-namespace DataLayer
+namespace BusinessLogic
 {
     public class ValidationException : Exception
     {
