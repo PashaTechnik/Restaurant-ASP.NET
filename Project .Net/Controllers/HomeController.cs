@@ -9,17 +9,7 @@ namespace PresentationLayer.Controllers
 {
     public class HomeController : Controller
     {
-        // RestaurantContext db;
-        // public HomeController(RestaurantContext context)
-        // {
-        //     db = context;
-        // }
-        // public IActionResult Index()
-        // {
-        //     return View( db.Menu.ToList());
-        // }
-        
-        
+
         IOrderService orderService;
          public HomeController(IOrderService serv)
          {
@@ -27,10 +17,7 @@ namespace PresentationLayer.Controllers
          }
          public ActionResult Index()
          {
-             IEnumerable<BusinessLogic.Menu> dish = orderService.GetDish();
-             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<BusinessLogic.Menu, MenuViewModel>()).CreateMapper();
-             var dishs = mapper.Map<IEnumerable<BusinessLogic.Menu>, List<MenuViewModel>>(dish);
-             return View(dishs);
+             return View();
          }
   
          public ActionResult MakeOrder(int? id)
@@ -67,6 +54,15 @@ namespace PresentationLayer.Controllers
              }
              return View(order);
          }
+
+         public ViewResult Main()
+         {
+             IEnumerable<BusinessLogic.Menu> dish = orderService.GetDish();
+             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<BusinessLogic.Menu, MenuViewModel>()).CreateMapper();
+             var dishs = mapper.Map<IEnumerable<BusinessLogic.Menu>, List<MenuViewModel>>(dish);
+             return View(dishs);
+         }
+
          protected override void Dispose(bool disposing)
          {
              //orderService.Dispose();

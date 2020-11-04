@@ -1,40 +1,87 @@
 @model List<PresentationLayer.MenuViewModel>
- 
 @{
-    ViewBag.Title = "Index";
+    Layout = null;
 }
- 
-<h2>Index</h2>
- 
-<table class="table">
-    <tr>
-        <th>
-            Positionid
-        </th>
-        <th>
-            Dishid
-        </th>
-        <th>
-            Price
-        </th>
-        <th></th>
-    </tr>
- 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Positionid)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Dishid)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Price)
-        </td>
-        <td>
-            @Html.ActionLink("Order", "MakeOrder", new { id=item.Positionid })
-        </td>
-    </tr>
-}
- 
-</table>
+
+<!DOCTYPE html>
+
+<!DOCTYPE html> 
+<html> 
+	<head> 
+		
+		<style type="text/css"> 
+		.container { 
+			width:600px; 
+			height:190px; 
+			padding-top:20px; 
+			padding-left:15px; 
+			padding-right:15px; 
+		} 
+		.btn{
+            width:200px; 
+            height:100px; 
+            cursor:pointer;
+            font-size: 25pt;
+            border:solid black; 
+		}
+		#btn1{
+		    background-color:green; 
+		}
+		#btn2{
+		    margin-left: 10px;
+        	background-color:red; 
+        }
+       	#btn3{
+       		background-color:blue; 
+       	}
+		#st-box { 
+			float:left; 
+			width:180px; 
+			height:160px; 
+			background-color:white; 
+
+		} 
+		#nd-box { 
+			float:left; 
+			width:180px; 
+			height:160px; 
+			background-color:white; 
+
+			margin-left:20px; 
+		} 
+		#rd-box { 
+			float:right; 
+			width:180px; 
+			height:160px; 
+			background-color:white; 
+		} 
+		h1 { 
+			color:Green; 
+		} 
+		</style> 
+	</head> 
+	
+	<body> 
+		<center> 
+		<h1>Restaurant</h1> 
+		
+		<div class="container"> 
+			<div id="st-box"> 
+				<a href="~/Home/MakeOrder">
+					<input  type="submit" value="Make Order" class="btn" id="btn1"/>
+				</a>
+			</div> 
+			
+			<div id="nd-box">
+				<a href="~/Home/Main">
+					<input href="~/Home/Main" type="submit" value="Edit Menu" class="btn" id="btn2"/>
+				</a>
+			</div> 
+			
+			<div id="rd-box"> 
+				<input type="submit" value="Create Dish" class="btn" id="btn3"/>
+			</div> 
+		</div> 
+		</center> 
+	</body> 
+</html>					 

@@ -15,7 +15,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Ninject;
 using Ninject.Modules;
-using PresentationLayer.Util;
 
 namespace PresentationLayer
 {
@@ -69,7 +68,8 @@ namespace PresentationLayer
             app.UseRouting();
 
             app.UseAuthorization();
-
+            
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
