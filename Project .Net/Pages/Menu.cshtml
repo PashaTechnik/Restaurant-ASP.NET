@@ -1,0 +1,41 @@
+@page
+@model Project_.Net.Pages.Menu
+ 
+@{
+    ViewBag.Title = "Index";
+}
+ 
+<h2>Index</h2>
+ 
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Positionid)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Dishid)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Price)
+        </th>
+        <th></th>
+    </tr>
+ 
+@* @foreach (var item in Model) { *@
+@*     <tr> *@
+@*         <td> *@
+@*             @Html.DisplayFor(modelItem => item.Positionid) *@
+@*         </td> *@
+@*         <td> *@
+@*             @Html.DisplayFor(modelItem => item.Dishid) *@
+@*         </td> *@
+@*         <td> *@
+@*             @Html.DisplayFor(modelItem => item.Price) *@
+@*         </td> *@
+@*         <td> *@
+@*             @Html.ActionLink("Order", "MakeOrder", new { id=item.Positionid }) *@
+@*         </td> *@
+@*     </tr> *@
+}
+ 
+</table>

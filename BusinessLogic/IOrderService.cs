@@ -4,7 +4,7 @@ namespace BusinessLogic
 {
     public interface IOrderService
     {
-        void MakeOrder(DataLayer.Orders orderDto);
+        void MakeOrder(BusinessLogic.Orders orderDto);
         Menu GetDish(int? id);
         IEnumerable<Menu> GetDish();
         void Dispose();

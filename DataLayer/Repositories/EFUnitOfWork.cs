@@ -9,6 +9,11 @@ namespace DataLayer
         
         private bool disposed = false;
         
+        public EFUnitOfWork()
+        {
+            db = new RestaurantContext();
+        }
+        
         private DishRepository dishRepository;
         private OrdersRepository ordersRepository;
         private DishdetailsRepository dishdetailsRepository;

@@ -8,6 +8,7 @@ namespace BusinessLogic
         public ValidationException(string message, string prop) : base(message)
         {
             Property = prop;
+            
         }
     }
 }

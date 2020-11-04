@@ -15,15 +15,21 @@ namespace BusinessLogic
             Database = uow;
         }
 
-        public void MakeOrder(DataLayer.Orders order)
+        public void MakeOrder(BusinessLogic.Orders order)
         {
-            DataLayer.Menu dish = Database.Menu.Get(order.Orderid);
-            
-            if (dish == null)
-                throw new ValidationException("Блюдо не найдено","");
+            // DataLayer.Menu dish = Database.Menu.Get(order.Orderid);
+            //
+            // if (dish == null)
+            //     throw new ValidationException("Блюдо не найдено","");
 
+            DataLayer.Orders orders = new DataLayer.Orders
+            {
+                Orderid = order.Orderid,
+                Clientname = order.Clientname,
+                Price = order.Price
+            };
 
-            Database.Orders.Create(order);
+            Database.Orders.Create(orders);
             Database.Save();
         }
         
