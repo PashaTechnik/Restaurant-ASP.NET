@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using AutoMapper;
 using BusinessLogic;
@@ -10,10 +12,14 @@ namespace PresentationLayer.Controllers
     public class HomeController : Controller
     {
 
-        IOrderService orderService;
-         public HomeController(IOrderService serv)
+         private IOrderService orderService;
+         private IMenuEditor menuEditor;
+         private IDishCreator dishCreator;
+         public HomeController(IOrderService serv, IMenuEditor edit, IDishCreator create)
          {
              orderService = serv;
+             menuEditor = edit;
+             dishCreator = create;
          }
          public ActionResult Index()
          {
@@ -55,17 +61,75 @@ namespace PresentationLayer.Controllers
              return View(order);
          }
 
-         public ViewResult Main()
+         public ViewResult EditMenu()
          {
-             IEnumerable<BusinessLogic.Menu> dish = orderService.GetDish();
-             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<BusinessLogic.Menu, MenuViewModel>()).CreateMapper();
-             var dishs = mapper.Map<IEnumerable<BusinessLogic.Menu>, List<MenuViewModel>>(dish);
-             return View(dishs);
+             IEnumerable<BusinessLogic.Menu> menu = menuEditor.GetMenu();
+             IEnumerable<BusinessLogic.Dish> dish = menuEditor.GetDish();
+             
+             var mapper1 = new MapperConfiguration(cfg => cfg.CreateMap<BusinessLogic.Menu, MenuViewModel>()).CreateMapper();
+             var menus = mapper1.Map<IEnumerable<BusinessLogic.Menu>, List<MenuViewModel>>(menu);
+             
+             var mapper2 = new MapperConfiguration(cfg => cfg.CreateMap<BusinessLogic.Dish, DishViewModel>()).CreateMapper();
+             var dishs = mapper2.Map<IEnumerable<BusinessLogic.Dish>, List<DishViewModel>>(dish);
+             
+             dynamic mymodel = new ExpandoObject();
+             mymodel.Menu = menus;
+             mymodel.Dishs = dishs;
+
+             foreach (var i in menus)
+             {
+                 foreach (var k in dishs)
+                 {
+                     if (i.Dishid == k.Dishid)
+                     {
+                         i.DishName = k.Name;
+                     }
+                 }
+             }
+             
+             return View(mymodel);
          }
+         [HttpPost]
+         public IActionResult EditMenu(string id, string price, string size)
+         {
+             var menuDto = new DataLayer.Menu
+             {
+                 Dishid = int.Parse(id),
+                 Size = int.Parse(size),
+                 Price = int.Parse(price)
+             };
+             menuEditor.EditMenu(menuDto);
+
+             return new RedirectToPageResult("/");
+             
+         }
+         
+         public ViewResult CreateDish()
+         {
+             IEnumerable<BusinessLogic.Ingredient> ingredient = dishCreator.GetIngredients();
+             IEnumerable<BusinessLogic.Dish> dish = dishCreator.GetDish();
+             
+             var mapper1 = new MapperConfiguration(cfg => cfg.CreateMap<BusinessLogic.Ingredient, IngredientViewModel>()).CreateMapper();
+             var ingredients = mapper1.Map<IEnumerable<BusinessLogic.Ingredient>, List<IngredientViewModel>>(ingredient);
+             
+             var mapper2 = new MapperConfiguration(cfg => cfg.CreateMap<BusinessLogic.Dish, DishViewModel>()).CreateMapper();
+             var dishs = mapper2.Map<IEnumerable<BusinessLogic.Dish>, List<DishViewModel>>(dish);
+             
+             dynamic mymodel = new ExpandoObject();
+             mymodel.Ingredients = ingredients;
+             mymodel.Dishs = dishs;
+             
+             
+             return View(mymodel);
+         }
+         
+         
 
          protected override void Dispose(bool disposing)
          {
-             //orderService.Dispose();
+             orderService.Dispose();
+             menuEditor.Dispose();
+             dishCreator.Dispose();
              base.Dispose(disposing);
          }
     }

@@ -1,0 +1,92 @@
+@model dynamic
+
+@{
+    ViewBag.Title = "EditMenu";
+}
+
+<html>
+
+<head>
+  <link rel="stylesheet" href="../../wwwroot/lib/bootstrap/dist/css/site.css">
+
+  <style type="text/css"> 
+
+    #rightTbl{
+        margin-left: 280px;
+        font-size: 26pt;
+        color: green;
+    }
+    #leftTbl{
+        font-size: 26pt;
+        color: #17a2b8;
+    }
+    #content{
+        text-align: center;
+        font-size: 26pt;
+    }
+		</style>
+</head> 
+<div style="text-align: center;" >
+  <h2>EditMenu</h2>
+</div>
+
+<body>
+  <div id="content">
+    <table style="float: left" id="leftTbl">
+      <tr>
+        <td>
+          ID
+        </td>
+        <td>
+          Name
+        </td>
+        <td>
+          Size
+        </td>
+        <td>
+          Price
+        </td>
+      </tr>
+      @foreach (var item in Model.Menu)
+      {
+        <tr>
+          <td>
+            @item.Positionid)
+          </td>
+          <td>
+            @item.DishName
+          </td>
+          <td>
+            @item.Size
+          </td>
+          <td>
+            @item.Price
+          </td>
+        </tr>
+      }
+    </table>
+    <table style="float: left" id="rightTbl">
+      @foreach (var item in Model.Dishs) {
+        <tr>
+          <td>
+            @item.Dishid)
+          </td>
+          <td>
+            @item.Name
+          </td>
+        </tr>
+      }
+      
+    </table>
+    <form method="post">
+      <label for="fname">Dish Id:</label>
+      <input type="text" id="fname" name="id"><br><br>
+      <label for="lname">Dish Size:</label>
+      <input type="text" id="lname" name="size"><br><br>
+      <label for="lname">Dish Price:</label>
+      <input type="text" id="lname" name="price"><br><br>
+      <input type="submit" value="Edit">
+    </form>
+  </div>
+  </body>
+</html>

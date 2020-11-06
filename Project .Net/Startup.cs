@@ -46,6 +46,8 @@ namespace PresentationLayer
             
             services.AddTransient<IUnitOfWork, EFUnitOfWork>();
             services.AddTransient<IOrderService, OrderService>();
+            services.AddTransient<IDishCreator, DishCreator>();
+            services.AddTransient<IMenuEditor, MenuEditor>();
 
             services.AddMvc();
         }

@@ -1,0 +1,80 @@
+@model dynamic
+
+@{
+    ViewBag.Title = "CreateDish";
+}
+
+<html>
+
+<head> 
+		
+    <style type="text/css"> 
+
+    #rightTbl{
+        margin-left: 280px;
+        font-size: 26pt;
+        color: green;
+    }
+    #leftTbl{
+        font-size: 26pt;
+        color: #17a2b8;
+    }
+    #content{
+        text-align: center;
+        font-size: 26pt;
+    }
+	</style> 
+</head> 
+
+
+
+<body style="text-align: center;">
+<div style="text-align: center;" >
+    <h2>CreateDish</h2>
+</div>
+<div id="content">
+    <table style="float: left" id="leftTbl">
+        <tr>
+            <td>
+                ID
+            </td>
+            <td>
+                Name
+            </td>
+        </tr>
+        @foreach (var item in Model.Dishs)
+        {
+            <tr>
+                <td>
+                    @item.Dishid)
+                </td>
+                <td>
+                    @item.DishName
+                </td>
+            </tr>
+        }
+    </table>
+    <table style="float: left" id="rightTbl">
+<form method="post">
+    @foreach (var item in Model.Ingredients)
+    {
+        <tr>
+            <td>
+                @item.Ingredientid)
+            </td>
+            <td>
+                @item.Name
+            </td>
+            <td>
+                <input name="AreChecked" type="checkbox" value="@item.Ingredientid"/>
+            </td>
+        </tr>
+
+    }
+    <button>Click</button>
+</form>
+      
+    </table>
+</div>
+</body>
+</html>

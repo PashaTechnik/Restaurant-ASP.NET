@@ -40,8 +40,9 @@ namespace BusinessLogic
         
         public IEnumerable<Dish> GetDish()
         {
-            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<DataLayer.Menu, Menu>()).CreateMapper();
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<DataLayer.Dish, Dish>()).CreateMapper();
             return mapper.Map<IEnumerable<DataLayer.Dish>, List<Dish>>(Database.Dishs.GetAll());
+            
         }
 
         public void Dispose()

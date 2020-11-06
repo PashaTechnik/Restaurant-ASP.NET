@@ -4,7 +4,9 @@ namespace PresentationLayer
     {
         public int Positionid { get; set; }
         public int? Dishid { get; set; }
-        public string Name { get; set; }
+        
+        public string? DishName { get; set; }
+
         public int? Size { get; set; }
         public int? Price { get; set; }
     }
