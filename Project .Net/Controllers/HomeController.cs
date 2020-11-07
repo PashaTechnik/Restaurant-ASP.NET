@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.IO;
 using System.Linq;
 using AutoMapper;
 using BusinessLogic;
 using DataLayer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 
 namespace PresentationLayer.Controllers
 {
@@ -121,6 +123,39 @@ namespace PresentationLayer.Controllers
              
              
              return View(mymodel);
+         }
+         
+         [BindProperty]
+         public List<int> AreChecked { get; set; }
+         
+         [HttpPost]
+         public IActionResult CreateDish(string name)
+         {
+             IEnumerable<BusinessLogic.Dish> dish = dishCreator.GetDish();
+             var mapper2 = new MapperConfiguration(cfg => cfg.CreateMap<BusinessLogic.Dish, DishViewModel>()).CreateMapper();
+             var dishs = mapper2.Map<IEnumerable<BusinessLogic.Dish>, List<DishViewModel>>(dish);
+             var last = dishs.LastOrDefault().Dishid;
+             
+             var dishDto = new BusinessLogic.Dish
+             {
+                 Name = name,
+             };
+             dishCreator.EditDish(dishDto);
+
+             var IDs = AreChecked.ToArray();
+
+             for (int i = 0; i < IDs.Length; i++)
+             {
+                 var detailsDto = new BusinessLogic.Dishdetails
+                 {
+                     Dishid = last + 1,
+                     Ingredientid = IDs[i]
+                 };
+                 dishCreator.EditDetails(detailsDto);
+             }
+
+             return new RedirectToPageResult("/");
+             
          }
          
          

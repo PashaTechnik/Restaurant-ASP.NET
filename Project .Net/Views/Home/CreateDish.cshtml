@@ -5,35 +5,42 @@
 }
 
 <html>
-
-<head> 
-		
+<head>
     <style type="text/css"> 
 
     #rightTbl{
-        margin-left: 280px;
         font-size: 26pt;
         color: green;
+        
     }
     #leftTbl{
+        margin-bottom: 50px;
         font-size: 26pt;
         color: #17a2b8;
     }
     #content{
-        text-align: center;
+
+    }
+    #input{
         font-size: 26pt;
     }
-	</style> 
-</head> 
+    button{
+        font-size: 16pt;
+        background-color: #007bff;
+        border-radius: 8px;
+        border:solid black; 
+    }
+	</style>
+</head>
 
 
 
-<body style="text-align: center;">
-<div style="text-align: center;" >
+<body>
+<div style="text-align: center;">
     <h2>CreateDish</h2>
 </div>
 <div id="content">
-    <table style="float: left" id="leftTbl">
+    <table id="leftTbl">
         <tr>
             <td>
                 ID
@@ -49,31 +56,34 @@
                     @item.Dishid)
                 </td>
                 <td>
-                    @item.DishName
+                    @item.Name
                 </td>
             </tr>
         }
     </table>
-    <table style="float: left" id="rightTbl">
-<form method="post">
-    @foreach (var item in Model.Ingredients)
-    {
-        <tr>
-            <td>
-                @item.Ingredientid)
-            </td>
-            <td>
-                @item.Name
-            </td>
-            <td>
-                <input name="AreChecked" type="checkbox" value="@item.Ingredientid"/>
-            </td>
-        </tr>
+    <table id="rightTbl">
+        <form method="post">
+            @foreach (var item in Model.Ingredients)
+            {
+                <tr>
+                    <td>
+                        @item.Ingredientid)
+                    </td>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        <input name="AreChecked" type="checkbox" value="@item.Ingredientid"/>
+                    </td>
+                </tr>
 
-    }
-    <button>Click</button>
-</form>
-      
+            }
+            <div id="input">
+                <label for="fname">Dish Name:</label>
+                <input type="text" id="fname" name="name"><br><br>
+                <button>Create Dish</button>
+            </div>
+        </form>
     </table>
 </div>
 </body>
