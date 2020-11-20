@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using DataLayer;
+using Microsoft.AspNetCore;
 using Dish = DataLayer.Dish;
 
 namespace PresentationLayer
@@ -64,5 +65,16 @@ namespace PresentationLayer
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+        
+        public static IWebHost BuildWebHost(string[] args)
+        {
+            var config = new ConfigurationBuilder().AddCommandLine(args).Build();
+            var enviroment = config["environment"] ?? "Development";
+            
+            return WebHost.CreateDefaultBuilder(args)
+                .UseEnvironment(enviroment)
+                .UseStartup<Startup>()
+                .Build();
+        }
     }
 }

@@ -17,11 +17,7 @@ namespace BusinessLogic
 
         public void MakeOrder(BusinessLogic.Orders order)
         {
-            // DataLayer.Menu dish = Database.Menu.Get(order.Orderid);
-            //
-            // if (dish == null)
-            //     throw new ValidationException("Блюдо не найдено","");
-
+            
             DataLayer.Orders orders = new DataLayer.Orders
             {
                 Orderid = order.Orderid,
@@ -32,7 +28,20 @@ namespace BusinessLogic
             Database.Orders.Create(orders);
             Database.Save();
         }
-        
+
+        public void MakeOrderDetails(Orderdetails orderDetailsDto)
+        {
+            DataLayer.Orderdetails orderDetails = new DataLayer.Orderdetails
+            {
+                Orderid = orderDetailsDto.Orderid,
+                Positionid = orderDetailsDto.Positionid,
+                Quantity = orderDetailsDto.Quantity
+            };
+
+            Database.Orderdetails.Create(orderDetails);
+            Database.Save();
+        }
+
 
         public Menu GetDish(int? id)
         {
@@ -55,6 +64,18 @@ namespace BusinessLogic
         {
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<DataLayer.Menu, Menu>()).CreateMapper();
             return mapper.Map<IEnumerable<DataLayer.Menu>, List<Menu>>(Database.Menu.GetAll());
+        }
+
+        public IEnumerable<Dish> GetDishName()
+        {
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<DataLayer.Dish, Dish>()).CreateMapper();
+            return mapper.Map<IEnumerable<DataLayer.Dish>, List<Dish>>(Database.Dishs.GetAll());
+        }
+
+        public IEnumerable<Orders> GetOrder()
+        {
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<DataLayer.Orders, Orders>()).CreateMapper();
+            return mapper.Map<IEnumerable<DataLayer.Orders>, List<Orders>>(Database.Orders.GetAll());
         }
 
         public void Dispose()

@@ -122,10 +122,7 @@ namespace DataLayer
 
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
 
-                entity.HasOne(d => d.Order)
-                    .WithMany(p => p.Orderdetails)
-                    .HasForeignKey(d => d.Orderid)
-                    .HasConstraintName("fk_order_details_orders");
+
 
                 entity.HasOne(d => d.Position)
                     .WithMany(p => p.Orderdetails)

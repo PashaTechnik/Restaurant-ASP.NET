@@ -39,14 +39,10 @@ namespace PresentationLayer
             
             
             
-            // NinjectModule orderModule = new OrderModule();
-            // NinjectModule serviceModule = new ServiceModule(configuration.GetConnectionString("myDb"));
-            // var kernel = new StandardKernel(orderModule, serviceModule);
-            // DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
-            
             services.AddTransient<IUnitOfWork, EFUnitOfWork>();
             services.AddTransient<IOrderService, OrderService>();
             services.AddTransient<IDishCreator, DishCreator>();
+            services.AddTransient<IRestaurantService, RestaurantService>();
             services.AddTransient<IMenuEditor, MenuEditor>();
 
             services.AddMvc();

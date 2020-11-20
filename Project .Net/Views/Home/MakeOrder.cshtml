@@ -1,42 +1,125 @@
-@model PresentationLayer.OrderViewModel
- 
+@model dynamic
+
 @{
     ViewBag.Title = "MakeOrder";
 }
- 
-<h2>Make Order</h2>
- 
- 
-@using (Html.BeginForm()) 
-{
-    @Html.AntiForgeryToken()
-     
-    <div class="form-horizontal">
-        <input type="hidden" name="PhoneId" value="@Model.Orderid" />
- 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Clientname, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Clientname, new { htmlAttributes = new { @class = "form-control" } })
-            </div>
-        </div>
- 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control" } })
-            </div>
-        </div>
- 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Make Order" class="btn btn-default" />
-            </div>
-        </div>
-    </div>
-}
- 
-<div>
-    @Html.ActionLink("Back to List", "Index")
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style type="text/css"> 
+
+    #rightTbl{
+        font-size: 26pt;
+        color: green;
+        
+    }
+    #leftTbl{
+        margin-bottom: 50px;
+        font-size: 26pt;
+        color: #17a2b8;
+    }
+    #content{
+
+    }
+    #input{
+        font-size: 26pt;
+    }
+    button{
+        font-size: 16pt;
+        background-color: #007bff;
+        border-radius: 8px;
+        border:solid black; 
+    }
+    #points{
+        width: 55px;
+        height: 25px;
+        font-size: 16pt;
+    }
+	</style>
+</head>
+
+
+
+<body>
+<div style="text-align: center;">
+    <h2>Make Order</h2>
 </div>
- 
+<div id="content">
+    <table id="leftTbl">
+        <tr>
+            <td>
+                ID
+            </td>
+            <td>
+                Name
+            </td>
+            <td>
+                Price
+            </td>
+        </tr>
+        @foreach (var item in Model.Orders)
+        {
+            <tr>
+                <td>
+                    @item.Orderid)
+                </td>
+                <td>
+                    @item.Clientname
+                </td>
+                <td>
+                    @item.Price
+                </td>
+            </tr>
+        }
+    </table>
+    <table id="rightTbl">
+        <form method="post">
+            <tr>
+                <td>
+                    ID
+                </td>
+                <td>
+                    Name
+                </td>
+                <td>
+                    Size
+                </td>
+                <td>
+                    Price
+                </td>
+            </tr>
+            @foreach (var item in Model.Menu)
+            {
+                <tr>
+                    <td>
+                        @item.Positionid)
+                    </td>
+                    <td>
+                        @item.DishName
+                    </td>
+                    <td>
+                        @item.Size
+                    </td>
+                    <td>
+                        @item.Price
+                    </td>
+                    <td>
+                        <input name="AreCheckedDish" type="checkbox" value="@item.Positionid"/>
+                    </td>
+                    <td>
+                        <input type="number" id="points" name="Points" step="1">
+                    </td>
+                </tr>
+
+            }
+            <div id="input">
+                <label for="fname">Client Name:</label>
+                <input type="text" id="fname" name="name"><br><br>
+                <button>Make Order</button>
+            </div>
+        </form>
+    </table>
+</div>
+</body>
+</html>
