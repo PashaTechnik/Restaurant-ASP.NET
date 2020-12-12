@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using AutoMapper;
 using BusinessLogic;
 using DataLayer;
@@ -14,59 +15,111 @@ namespace PresentationLayer.Controllers
     public class HomeController : Controller
     {
 
-         private IOrderService orderService;
-         private IMenuEditor menuEditor;
-         private IDishCreator dishCreator;
-         public HomeController(IOrderService serv, IMenuEditor edit, IDishCreator create)
+         // private IOrderService orderService;
+         // private IMenuEditor menuEditor;
+         // private IDishCreator dishCreator;
+         
+         private IRestaurantService restaurantService;
+         public HomeController(IRestaurantService service)
          {
-             orderService = serv;
-             menuEditor = edit;
-             dishCreator = create;
+             restaurantService = service;
          }
+         
+         
+         
          public ActionResult Index()
          {
              return View();
          }
-  
-         public ActionResult MakeOrder(int? id)
+         
+         public ViewResult MakeOrder()
          {
-             try
+             IEnumerable<BusinessLogic.Orders> order = restaurantService.GetOrder();
+             IEnumerable<BusinessLogic.Menu> menu = restaurantService.GetMenu();
+             IEnumerable<BusinessLogic.Dish> dish = restaurantService.GetDish();
+             
+             
+             
+             var mapper1 = new MapperConfiguration(cfg => cfg.CreateMap<BusinessLogic.Menu, MenuViewModel>()).CreateMapper();
+             var menus = mapper1.Map<IEnumerable<BusinessLogic.Menu>, List<MenuViewModel>>(menu);
+             
+             var mapper2 = new MapperConfiguration(cfg => cfg.CreateMap<BusinessLogic.Orders, OrderViewModel>()).CreateMapper();
+             var orders = mapper2.Map<IEnumerable<BusinessLogic.Orders>, List<OrderViewModel>>(order);
+             
+             var mapper3 = new MapperConfiguration(cfg => cfg.CreateMap<BusinessLogic.Dish, DishViewModel>()).CreateMapper();
+             var dishs = mapper3.Map<IEnumerable<BusinessLogic.Dish>, List<DishViewModel>>(dish);
+             
+             dynamic mymodel = new ExpandoObject();
+             mymodel.Orders = orders;
+             mymodel.Menu = menus;
+             
+             foreach (var i in menus)
              {
-                 BusinessLogic.Menu dish = orderService.GetDish(id);
-                 var order = new OrderViewModel { Orderid = dish.Positionid };
-                  
-                 return View(order);
-             }
-             catch (ValidationException ex)
-             {
-                 return Content(ex.Message);
-             }
-         }
-         [HttpPost]
-         public ActionResult MakeOrder(OrderViewModel order)
-         {
-             try
-             {
-                 var orderDto = new BusinessLogic.Orders
+                 foreach (var k in dishs)
                  {
-                     Orderid = order.Orderid,
-                     Clientname = order.Clientname,
-                     Price = order.Price 
-                 };
-                 orderService.MakeOrder(orderDto);
-                 return Content("<h2>Ваш заказ успешно оформлен</h2>");
+                     if (i.Dishid == k.Dishid)
+                     {
+                         i.DishName = k.Name;
+                     }
+                 }
              }
-             catch (ValidationException ex)
+             
+             return View(mymodel);
+         }
+         
+         [BindProperty]
+         public List<int> AreCheckedDish { get; set; }
+         
+         [HttpPost]
+         public ActionResult MakeOrder(string name, int quantity)
+         {
+             IEnumerable<BusinessLogic.Menu> menu = restaurantService.GetMenu();
+             var mapper1 = new MapperConfiguration(cfg => cfg.CreateMap<BusinessLogic.Menu, MenuViewModel>()).CreateMapper();
+             var menus = mapper1.Map<IEnumerable<BusinessLogic.Menu>, List<MenuViewModel>>(menu);
+             IEnumerable<BusinessLogic.Orders> order = restaurantService.GetOrder();
+             var mapper2 = new MapperConfiguration(cfg => cfg.CreateMap<BusinessLogic.Orders, OrderViewModel>()).CreateMapper();
+             var orders = mapper2.Map<IEnumerable<BusinessLogic.Orders>, List<OrderViewModel>>(order);
+
+             var last = orders.LastOrDefault().Orderid;
+             int price = 0;
+             
+
+             var IDs = AreCheckedDish.ToArray();
+             var quantities = Points.ToArray();
+
+             for (int i = 0; i < IDs.Length; i++)
              {
-                 ModelState.AddModelError(ex.Property, ex.Message);
+                 var detailsDto = new BusinessLogic.Orderdetails
+                 {
+                     Orderid = last + 1,
+                     Quantity = quantities[i],
+                     Positionid = IDs[i]
+                 };
+                 restaurantService.MakeOrderDetails(detailsDto);
+                 foreach (var item in menus)
+                 {
+                     if (IDs[i] == item.Positionid)
+                     {
+                         price += quantities[i] * (item.Price ?? 0);
+                     }
+                 }
+
              }
-             return View(order);
+             var orderDto = new BusinessLogic.Orders
+             {
+                 Clientname = name,
+                 Price = price
+             };
+             restaurantService.MakeOrder(orderDto);
+
+             return new RedirectToPageResult("/");
+
          }
 
          public ViewResult EditMenu()
          {
-             IEnumerable<BusinessLogic.Menu> menu = menuEditor.GetMenu();
-             IEnumerable<BusinessLogic.Dish> dish = menuEditor.GetDish();
+             IEnumerable<BusinessLogic.Menu> menu = restaurantService.GetMenu();
+             IEnumerable<BusinessLogic.Dish> dish = restaurantService.GetDish();
              
              var mapper1 = new MapperConfiguration(cfg => cfg.CreateMap<BusinessLogic.Menu, MenuViewModel>()).CreateMapper();
              var menus = mapper1.Map<IEnumerable<BusinessLogic.Menu>, List<MenuViewModel>>(menu);
@@ -94,13 +147,13 @@ namespace PresentationLayer.Controllers
          [HttpPost]
          public IActionResult EditMenu(string id, string price, string size)
          {
-             var menuDto = new DataLayer.Menu
+             var menuDto = new BusinessLogic.Menu
              {
                  Dishid = int.Parse(id),
                  Size = int.Parse(size),
                  Price = int.Parse(price)
              };
-             menuEditor.EditMenu(menuDto);
+             restaurantService.EditMenu(menuDto);
 
              return new RedirectToPageResult("/");
              
@@ -108,8 +161,8 @@ namespace PresentationLayer.Controllers
          
          public ViewResult CreateDish()
          {
-             IEnumerable<BusinessLogic.Ingredient> ingredient = dishCreator.GetIngredients();
-             IEnumerable<BusinessLogic.Dish> dish = dishCreator.GetDish();
+             IEnumerable<BusinessLogic.Ingredient> ingredient = restaurantService.GetIngredients();
+             IEnumerable<BusinessLogic.Dish> dish = restaurantService.GetDish();
              
              var mapper1 = new MapperConfiguration(cfg => cfg.CreateMap<BusinessLogic.Ingredient, IngredientViewModel>()).CreateMapper();
              var ingredients = mapper1.Map<IEnumerable<BusinessLogic.Ingredient>, List<IngredientViewModel>>(ingredient);
@@ -127,11 +180,14 @@ namespace PresentationLayer.Controllers
          
          [BindProperty]
          public List<int> AreChecked { get; set; }
-         
+
+         [BindProperty] 
+         public List<int> Points { get; set; }
+
          [HttpPost]
          public IActionResult CreateDish(string name)
          {
-             IEnumerable<BusinessLogic.Dish> dish = dishCreator.GetDish();
+             IEnumerable<BusinessLogic.Dish> dish = restaurantService.GetDish();
              var mapper2 = new MapperConfiguration(cfg => cfg.CreateMap<BusinessLogic.Dish, DishViewModel>()).CreateMapper();
              var dishs = mapper2.Map<IEnumerable<BusinessLogic.Dish>, List<DishViewModel>>(dish);
              var last = dishs.LastOrDefault().Dishid;
@@ -140,7 +196,7 @@ namespace PresentationLayer.Controllers
              {
                  Name = name,
              };
-             dishCreator.EditDish(dishDto);
+             restaurantService.EditDish(dishDto);
 
              var IDs = AreChecked.ToArray();
 
@@ -149,22 +205,19 @@ namespace PresentationLayer.Controllers
                  var detailsDto = new BusinessLogic.Dishdetails
                  {
                      Dishid = last + 1,
-                     Ingredientid = IDs[i]
+                     Ingredientid = IDs[i],
+                     
                  };
-                 dishCreator.EditDetails(detailsDto);
+                 restaurantService.EditDetails(detailsDto);
              }
 
              return new RedirectToPageResult("/");
              
          }
-         
-         
 
          protected override void Dispose(bool disposing)
          {
-             orderService.Dispose();
-             menuEditor.Dispose();
-             dishCreator.Dispose();
+             restaurantService.Dispose();
              base.Dispose(disposing);
          }
     }

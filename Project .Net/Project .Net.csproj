@@ -7,6 +7,8 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.7" />
+      <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="3.1.10" />
+      <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.10" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.9" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.9" />
       <PackageReference Include="Ninject" Version="3.3.4" />
