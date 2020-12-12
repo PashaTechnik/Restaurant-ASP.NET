@@ -8,13 +8,12 @@ using DataLayer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using Ninject;
-using Ninject.Modules;
 
 namespace PresentationLayer
 {
@@ -37,13 +36,16 @@ namespace PresentationLayer
             services.AddDbContext<RestaurantContext>(options =>
                 options.UseNpgsql(configuration.GetConnectionString("myDb")));
             
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp/dist";
+            });
             
-            
-            services.AddTransient<IUnitOfWork, EFUnitOfWork>();
-            services.AddTransient<IOrderService, OrderService>();
-            services.AddTransient<IDishCreator, DishCreator>();
-            services.AddTransient<IRestaurantService, RestaurantService>();
-            services.AddTransient<IMenuEditor, MenuEditor>();
+            // services.AddTransient<IUnitOfWork, EFUnitOfWork>();
+            // services.AddTransient<IOrderService, OrderService>();
+            // services.AddTransient<IDishCreator, DishCreator>();
+            // services.AddTransient<IRestaurantService, RestaurantService>();
+            // services.AddTransient<IMenuEditor, MenuEditor>();
 
             services.AddMvc();
         }
@@ -54,25 +56,32 @@ namespace PresentationLayer
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
+            
+            if (!env.IsDevelopment())
             {
-                app.UseExceptionHandler("/Error");
-                app.UseHsts();
+                app.UseSpaStaticFiles();
             }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
-
             app.UseAuthorization();
             
+            // app.UseEndpoints(endpoints =>
+            // {
+            //     endpoints.MapControllerRoute(
+            //         name: "default",
+            //         pattern: "{controller=Home}/{action=Index}/{id?}");
+            // });
             
-            app.UseEndpoints(endpoints =>
+            app.UseSpa(spa =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                spa.Options.SourcePath = "ClientApp";
+ 
+                if (env.IsDevelopment())
+                {
+                    spa.UseAngularCliServer(npmScript: "start");
+                }
             });
         }
     }
